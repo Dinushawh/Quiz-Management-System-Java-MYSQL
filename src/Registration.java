@@ -1,0 +1,920 @@
+
+import java.awt.Color;
+import java.awt.HeadlessException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author dinus
+ */
+public final class Registration extends javax.swing.JFrame {
+
+    /**
+     * Creates new form Register
+     */
+    Connection con = null;
+    Statement stmt = null;
+    ResultSet rs = null;
+    
+    String newuserid,check;
+    
+    public Registration() {
+        initComponents();
+        
+        con = Database_connection_CLASS.connection();
+        
+        genaratenewuserid();
+        
+        step2.setVisible(false);
+        step3.setVisible(false);
+        step4.setVisible(false);
+        step5.setVisible(false);
+
+        massage.setVisible(false);
+        massage1.setVisible(false);
+        massage2.setVisible(false);
+        massage3.setVisible(false);
+
+        
+        ok.setVisible(false);
+        cansel.setVisible(false);
+    }
+    
+    public void genaratenewuserid (){
+    
+        try{
+            String itemidset = null;
+            stmt = con.createStatement();
+            ResultSet rsd = stmt.executeQuery("SELECT MAX(userid) FROM users");
+            rsd.next();
+            rsd.getString("MAX(userid)");
+            if (rsd.getString("MAX(userid)") == null) {
+                itemidset = "u000001";System.out.println(itemidset);
+                this.newuserid = itemidset;
+                System.out.println(newuserid);
+            } 
+            else {
+                long id = Long.parseLong(rsd.getString("MAX(userid)").substring(2, rsd.getString("MAX(userid)").length()));
+                id++;
+                itemidset = ("u" + String.format("%06d", id));
+                System.out.println(itemidset);
+                this.newuserid = itemidset;
+
+            }
+        }
+        catch(NumberFormatException | SQLException e){
+            System.out.println("Error Genarate user id");
+        }
+    }
+    
+    public void usernameCheck(){
+    
+        try{
+            stmt = con.createStatement();
+            String userid = username.getText();
+
+            if( username.getText().equals("") )
+            {
+                ok.setVisible(false);
+                cansel.setVisible(true);
+                this.check = "NO";
+                
+            }
+            else
+            {
+                boolean loopcheck = false;
+                stmt = con.createStatement();
+                String query = "SELECT * FROM users ";
+                String Username = username.getText();
+                ResultSet rsd = stmt.executeQuery(query);
+                while(rsd.next())
+                {
+                    if (Username.equals(rsd.getString(3)))
+                    {
+                        
+                        loopcheck = true;
+                        ok.setVisible(false);
+                        cansel.setVisible(true);
+                        this.check = "NO";
+                        
+                    }
+                }
+                if(!loopcheck){
+                   
+                    ok.setVisible(true);
+                    cansel.setVisible(false);
+                    this.check = "YES";
+                    
+                }
+                }
+        
+        }
+        catch(SQLException e){
+            System.out.println("Error checking username");
+        }
+    }
+    
+    public void registerNewaccount(){
+    
+        try{
+            
+            stmt = con.createStatement();
+            String query = "INSERT INTO users (`userid`, `username`,`email`, `password`, `security question`, `answer`, `first name`, `last name`) VALUES (?,?,?,?,?,?,?,?)";
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            preparedStmt.setString(1, newuserid);
+            preparedStmt.setString(2, username.getText());
+            preparedStmt.setString(3, email.getText());
+            preparedStmt.setString(4, pw1.getText());
+            preparedStmt.setString(5, questionlist.getSelectedItem().toString());
+            preparedStmt.setString(6, answer.getText());
+            preparedStmt.setString(7, fname.getText());
+            preparedStmt.setString(8, lname.getText());
+            preparedStmt.execute();
+            
+            step5.setVisible(true);
+            
+            
+            
+        
+        }
+        catch(HeadlessException | SQLException e){
+            System.out.println("error saving data");
+        } 
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        step1 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        username = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        email = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        next1 = new javax.swing.JButton();
+        massage = new javax.swing.JLabel();
+        ok = new javax.swing.JLabel();
+        cansel = new javax.swing.JLabel();
+        step2 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        fname = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        lname = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        next2 = new javax.swing.JButton();
+        massage1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        step3 = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        answer = new javax.swing.JTextField();
+        jLabel18 = new javax.swing.JLabel();
+        next3 = new javax.swing.JButton();
+        massage2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        questionlist = new javax.swing.JComboBox<>();
+        step4 = new javax.swing.JPanel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
+        next4 = new javax.swing.JButton();
+        massage3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        pw2 = new javax.swing.JPasswordField();
+        pw1 = new javax.swing.JPasswordField();
+        step5 = new javax.swing.JPanel();
+        jLabel21 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Background-01.png"))); // NOI18N
+        jLabel1.setText("jLabel1");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 725, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+        );
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 800));
+
+        step1.setBackground(new java.awt.Color(255, 255, 255));
+        step1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel7.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(153, 153, 153));
+        jLabel7.setText("Sign in to Qize App using the details provided by your institute");
+        step1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 100, 380, 20));
+
+        jLabel5.setFont(new java.awt.Font("SansSerif", 0, 26)); // NOI18N
+        jLabel5.setText("Sign up.");
+        step1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 60, 380, 44));
+
+        username.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        username.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                usernameKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                usernameKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                usernameKeyTyped(evt);
+            }
+        });
+        step1.add(username, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 170, 380, 40));
+
+        jLabel13.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel13.setText("Your username");
+        step1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 140, 380, 30));
+
+        email.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        email.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                emailKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                emailKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                emailKeyTyped(evt);
+            }
+        });
+        step1.add(email, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 260, 380, 40));
+
+        jLabel14.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel14.setText("Your email ");
+        step1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 230, 380, 30));
+
+        next1.setText("Next");
+        next1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                next1ActionPerformed(evt);
+            }
+        });
+        step1.add(next1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 350, 380, 40));
+
+        massage.setText("jLabel2");
+        step1.add(massage, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 310, 380, 30));
+
+        ok.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icons8_ok_20px.png"))); // NOI18N
+        step1.add(ok, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 170, -1, 50));
+
+        cansel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icons8_cancel_20px.png"))); // NOI18N
+        step1.add(cansel, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 170, -1, 50));
+
+        jPanel1.add(step1, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 150, 612, 430));
+
+        step2.setBackground(new java.awt.Color(255, 255, 255));
+        step2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel8.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(153, 153, 153));
+        jLabel8.setText("Sign in to Qize App using the details provided by your institute");
+        step2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 100, 380, 20));
+
+        jLabel6.setFont(new java.awt.Font("SansSerif", 0, 26)); // NOI18N
+        jLabel6.setText("Account Details");
+        step2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 60, 380, 44));
+
+        fname.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        fname.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                fnameKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                fnameKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                fnameKeyTyped(evt);
+            }
+        });
+        step2.add(fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 170, 380, 40));
+
+        jLabel15.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel15.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel15.setText("Your first name");
+        step2.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 140, 380, 30));
+
+        lname.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        lname.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                lnameKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                lnameKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                lnameKeyTyped(evt);
+            }
+        });
+        step2.add(lname, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 260, 380, 40));
+
+        jLabel16.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel16.setText("Your last name");
+        step2.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 230, 380, 30));
+
+        next2.setText("Next");
+        next2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                next2ActionPerformed(evt);
+            }
+        });
+        step2.add(next2, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 350, 380, 40));
+
+        massage1.setText("jLabel2");
+        step2.add(massage1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 310, 380, 30));
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icons8_back_30px.png"))); // NOI18N
+        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel2MouseClicked(evt);
+            }
+        });
+        step2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 10, 40, 50));
+
+        jPanel1.add(step2, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 150, 612, 430));
+
+        step3.setBackground(new java.awt.Color(255, 255, 255));
+        step3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel9.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(153, 153, 153));
+        jLabel9.setText("Sign in to Qize App using the details provided by your institute");
+        step3.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 100, 380, 20));
+
+        jLabel10.setFont(new java.awt.Font("SansSerif", 0, 26)); // NOI18N
+        jLabel10.setText("Account Security");
+        step3.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 60, 380, 44));
+
+        jLabel17.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel17.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel17.setText("Your security question");
+        step3.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 140, 380, 30));
+
+        answer.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        answer.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                answerKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                answerKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                answerKeyTyped(evt);
+            }
+        });
+        step3.add(answer, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 260, 380, 40));
+
+        jLabel18.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel18.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel18.setText("Your answer");
+        step3.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 230, 380, 30));
+
+        next3.setText("Next");
+        next3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                next3ActionPerformed(evt);
+            }
+        });
+        step3.add(next3, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 350, 380, 40));
+
+        massage2.setText("jLabel2");
+        step3.add(massage2, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 310, 380, 30));
+
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icons8_back_30px.png"))); // NOI18N
+        jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel3MouseClicked(evt);
+            }
+        });
+        step3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 10, 40, 50));
+
+        questionlist.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        step3.add(questionlist, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 170, 380, 40));
+
+        jPanel1.add(step3, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 150, 612, 430));
+
+        step4.setBackground(new java.awt.Color(255, 255, 255));
+        step4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel11.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(153, 153, 153));
+        jLabel11.setText("Sign in to Qize App using the details provided by your institute");
+        step4.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 100, 380, 20));
+
+        jLabel12.setFont(new java.awt.Font("SansSerif", 0, 26)); // NOI18N
+        jLabel12.setText("Account Password");
+        step4.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 60, 380, 44));
+
+        jLabel19.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel19.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel19.setText("Your password");
+        step4.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 140, 380, 30));
+
+        jLabel20.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel20.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel20.setText("Confirm password");
+        step4.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 230, 380, 30));
+
+        next4.setText("Next");
+        next4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                next4ActionPerformed(evt);
+            }
+        });
+        step4.add(next4, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 350, 380, 40));
+
+        massage3.setText("jLabel2");
+        step4.add(massage3, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 310, 380, 30));
+
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icons8_back_30px.png"))); // NOI18N
+        jLabel4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel4MouseClicked(evt);
+            }
+        });
+        step4.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 10, 40, 50));
+        step4.add(pw2, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 260, 380, 40));
+        step4.add(pw1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 170, 380, 40));
+
+        jPanel1.add(step4, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 150, 612, 430));
+
+        step5.setBackground(new java.awt.Color(255, 255, 255));
+        step5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel21.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel21.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/icons8_done_60px_1.png"))); // NOI18N
+        jLabel21.setToolTipText("");
+        step5.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 500, 80));
+
+        jLabel22.setFont(new java.awt.Font("Segoe UI Semilight", 0, 36)); // NOI18N
+        jLabel22.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel22.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel22.setText("Congratulations!");
+        step5.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, 490, 50));
+
+        jLabel23.setFont(new java.awt.Font("Segoe UI Semilight", 0, 16)); // NOI18N
+        jLabel23.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel23.setText("You can log now and ready to use");
+        step5.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 220, 520, 50));
+
+        jLabel24.setFont(new java.awt.Font("Segoe UI Semilight", 0, 16)); // NOI18N
+        jLabel24.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel24.setText("Your account has been successfully created ");
+        step5.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 180, 520, 50));
+
+        jButton1.setBackground(new java.awt.Color(0, 51, 204));
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("Log in");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        step5.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 280, 230, 40));
+
+        jPanel1.add(step5, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 150, 612, 430));
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        pack();
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void usernameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_usernameKeyPressed
+        // TODO add your handling code here:
+        try{
+            usernameCheck();
+            massage.setVisible(false);
+        }
+        catch(Exception e){
+        
+        }
+        
+    }//GEN-LAST:event_usernameKeyPressed
+
+    private void usernameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_usernameKeyReleased
+        // TODO add your handling code here:
+        try{
+            usernameCheck();
+            massage.setVisible(false);
+        }
+        catch(Exception e){
+        
+        }
+        
+    }//GEN-LAST:event_usernameKeyReleased
+
+    private void usernameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_usernameKeyTyped
+        // TODO add your handling code here:
+        try{
+            usernameCheck();
+            massage.setVisible(false);
+        }
+        catch(Exception e){
+        
+        }
+        
+    }//GEN-LAST:event_usernameKeyTyped
+
+    private void emailKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_emailKeyPressed
+        // TODO add your handling code here:
+        try{
+            
+            massage.setVisible(false);
+        }
+        catch(Exception e){
+        
+        }
+    }//GEN-LAST:event_emailKeyPressed
+
+    private void emailKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_emailKeyReleased
+        // TODO add your handling code here:
+        try{
+            
+            massage.setVisible(false);
+        }
+        catch(Exception e){
+        
+        }
+    }//GEN-LAST:event_emailKeyReleased
+
+    private void emailKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_emailKeyTyped
+        // TODO add your handling code here:
+        try{
+            
+            massage.setVisible(false);
+        }
+        catch(Exception e){
+        
+        }
+    }//GEN-LAST:event_emailKeyTyped
+
+    private void next1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_next1ActionPerformed
+        // TODO add your handling code here:
+        try{
+        
+            if( username.getText().equals("")||email.getText().equals("")  )
+            {
+
+                massage.setVisible(true);
+                Color orange = new Color(255,102,0);
+                massage.setForeground(orange);
+                massage.setText("Important feilds are missing!");
+            }
+            else
+            {
+                step1.setVisible(false);
+                step2.setVisible(true);
+            }
+        }
+        catch(Exception e){
+        
+        }
+    }//GEN-LAST:event_next1ActionPerformed
+
+    private void fnameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fnameKeyPressed
+        // TODO add your handling code here:
+        try{
+            
+           massage1.setVisible(false);
+        }
+        catch(Exception e){
+        
+        }
+    }//GEN-LAST:event_fnameKeyPressed
+
+    private void fnameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fnameKeyReleased
+        // TODO add your handling code here:
+        try{
+            
+           massage1.setVisible(false);
+        }
+        catch(Exception e){
+        
+        }
+    }//GEN-LAST:event_fnameKeyReleased
+
+    private void fnameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fnameKeyTyped
+        // TODO add your handling code here:
+        try{
+            
+           massage1.setVisible(false);
+        }
+        catch(Exception e){
+        
+        }
+    }//GEN-LAST:event_fnameKeyTyped
+
+    private void lnameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lnameKeyPressed
+        // TODO add your handling code here:
+        try{
+            
+           massage1.setVisible(false);
+        }
+        catch(Exception e){
+        
+        }
+    }//GEN-LAST:event_lnameKeyPressed
+
+    private void lnameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lnameKeyReleased
+        // TODO add your handling code here:
+        try{
+            
+           massage1.setVisible(false);
+        }
+        catch(Exception e){
+        
+        }
+    }//GEN-LAST:event_lnameKeyReleased
+
+    private void lnameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lnameKeyTyped
+        // TODO add your handling code here:
+        try{
+            
+           massage1.setVisible(false);
+        }
+        catch(Exception e){
+        
+        }
+    }//GEN-LAST:event_lnameKeyTyped
+
+    private void next2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_next2ActionPerformed
+        // TODO add your handling code here:
+        try{
+        
+            if( fname.getText().equals("")||lname.getText().equals("")  )
+                {
+
+                    massage1.setVisible(true);
+                    Color orange = new Color(255,102,0);
+                    massage1.setForeground(orange);
+                    massage1.setText("Important feilds are missing!");
+                }
+            else
+            { 
+                step2.setVisible(false);
+                step3.setVisible(true);
+            }
+        }
+        catch(Exception e){
+        
+        }
+    }//GEN-LAST:event_next2ActionPerformed
+
+    private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
+        // TODO add your handling code here:
+        try{
+        
+            step2.setVisible(false);
+            step1.setVisible(true);
+        }
+        catch(Exception e){
+        
+        }
+    }//GEN-LAST:event_jLabel2MouseClicked
+
+    private void answerKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_answerKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_answerKeyPressed
+
+    private void answerKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_answerKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_answerKeyReleased
+
+    private void answerKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_answerKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_answerKeyTyped
+
+    private void next3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_next3ActionPerformed
+        // TODO add your handling code here:
+        try{
+        
+            if( answer.getText().equals("") )
+                {
+
+                    massage2.setVisible(true);
+                    Color orange = new Color(255,102,0);
+                    massage2.setForeground(orange);
+                    massage2.setText("Important feilds are missing!");
+                }
+            else
+            { 
+                step3.setVisible(false);
+                step4.setVisible(true);
+            }
+        }
+        catch(Exception e){
+        
+        }
+    }//GEN-LAST:event_next3ActionPerformed
+
+    private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
+        // TODO add your handling code here:
+        try{
+        
+            step3.setVisible(false);
+            step2.setVisible(true);
+        }
+        catch(Exception e){
+        
+        }
+    }//GEN-LAST:event_jLabel3MouseClicked
+
+    private void next4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_next4ActionPerformed
+        // TODO add your handling code here:
+        try{
+        
+            if( pw1.getText().equals("")&& pw2.getText().equals("")  )
+                {
+
+                    massage3.setVisible(true);
+                    Color orange = new Color(255,102,0);
+                    massage3.setForeground(orange);
+                    massage3.setText("Important feilds are missing!");
+                }
+            else
+            { 
+                if(pw1.getText().equals(pw2.getText())){
+                    
+                    step4.setVisible(false);
+                    registerNewaccount();
+                    
+                }
+                else{
+                    massage3.setVisible(true);
+                    Color orange = new Color(255,102,0);
+                    massage3.setForeground(orange);
+                    massage3.setText("Password Does not match");
+                }
+       
+            }
+        }
+        catch(Exception e){
+            
+            
+        }
+    }//GEN-LAST:event_next4ActionPerformed
+
+    private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
+        // TODO add your handling code here:
+        try{
+        
+            step4.setVisible(false);
+            step3.setVisible(true);
+        }
+        catch(Exception e){
+        
+        }
+    }//GEN-LAST:event_jLabel4MouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        try{
+        
+            this.setVisible(false);
+            Main Load = new Main ();
+            Load.setVisible(true);
+        }
+        catch(Exception e){
+            
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Registration.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Registration.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Registration.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Registration.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Registration().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField answer;
+    private javax.swing.JLabel cansel;
+    private javax.swing.JTextField email;
+    private javax.swing.JTextField fname;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JTextField lname;
+    private javax.swing.JLabel massage;
+    private javax.swing.JLabel massage1;
+    private javax.swing.JLabel massage2;
+    private javax.swing.JLabel massage3;
+    private javax.swing.JButton next1;
+    private javax.swing.JButton next2;
+    private javax.swing.JButton next3;
+    private javax.swing.JButton next4;
+    private javax.swing.JLabel ok;
+    private javax.swing.JPasswordField pw1;
+    private javax.swing.JPasswordField pw2;
+    private javax.swing.JComboBox<String> questionlist;
+    private javax.swing.JPanel step1;
+    private javax.swing.JPanel step2;
+    private javax.swing.JPanel step3;
+    private javax.swing.JPanel step4;
+    private javax.swing.JPanel step5;
+    private javax.swing.JTextField username;
+    // End of variables declaration//GEN-END:variables
+}
